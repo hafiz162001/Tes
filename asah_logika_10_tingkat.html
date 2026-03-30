@@ -1,46 +1,242 @@
 
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-.wrap { padding: 1rem 0; }
-.level-nav { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 1.25rem; }
-.lvl-btn { font-size: 11px; padding: 4px 10px; border-radius: 20px; border: 0.5px solid var(--color-border-secondary); background: none; cursor: pointer; color: var(--color-text-secondary); }
-.lvl-btn.active { background: var(--color-background-secondary); color: var(--color-text-primary); font-weight: 500; border-color: var(--color-border-primary); }
-.lvl-btn.done { border-color: #1D9E75; color: #0F6E56; }
-.prog-bar { display: flex; gap: 4px; margin-bottom: 1.25rem; }
-.prog-seg { height: 4px; flex: 1; border-radius: 2px; background: var(--color-border-tertiary); }
-.prog-seg.done { background: #5DCAA5; }
-.prog-seg.active { background: #1D9E75; }
-.badge { display: inline-block; font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 20px; margin-bottom: 8px; }
-.q-title { font-size: 19px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 3px; }
-.q-sub { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 1.25rem; }
-.card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.25rem; margin-bottom: 1rem; }
-.q-text { font-size: 15px; color: var(--color-text-primary); line-height: 1.65; margin-bottom: 1rem; }
-.hint-box { background: var(--color-background-secondary); border-left: 2px solid #5DCAA5; border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0; padding: 8px 12px; font-size: 13px; color: var(--color-text-secondary); margin-bottom: 1rem; display: none; }
-.opts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.opt { background: var(--color-background-primary); border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); padding: 10px 14px; font-size: 14px; color: var(--color-text-primary); cursor: pointer; text-align: left; transition: background 0.12s, border-color 0.12s; }
-.opt:hover:not(:disabled) { background: var(--color-background-secondary); border-color: var(--color-border-primary); }
-.opt.correct { background: #E1F5EE; border-color: #1D9E75; color: #085041; }
-.opt.wrong { background: #FCEBEB; border-color: #E24B4A; color: #501313; }
-.opt:disabled { cursor: default; }
-.fb { margin-top: 1rem; font-size: 13px; line-height: 1.5; padding: 10px 14px; border-radius: var(--border-radius-md); display: none; }
-.fb.correct { background: #E1F5EE; color: #0F6E56; border: 0.5px solid #5DCAA5; }
-.fb.wrong { background: #FCEBEB; color: #A32D2D; border: 0.5px solid #F09595; }
-.row { display: flex; align-items: center; justify-content: space-between; margin-top: 1rem; }
-.hint-btn { font-size: 12px; color: var(--color-text-secondary); background: none; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 5px 11px; cursor: pointer; }
-.hint-btn:hover { background: var(--color-background-secondary); }
-.next-btn { font-size: 13px; font-weight: 500; color: var(--color-text-primary); background: none; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); padding: 7px 16px; cursor: pointer; display: none; }
-.next-btn:hover { background: var(--color-background-secondary); }
-.end-panel { text-align: center; padding: 2rem 1rem; }
-.score-big { font-size: 52px; font-weight: 500; color: var(--color-text-primary); }
-.score-lbl { font-size: 14px; color: var(--color-text-secondary); margin: 4px 0 1.25rem; }
-.stars { font-size: 26px; letter-spacing: 3px; margin-bottom: 1rem; }
-.msg { font-size: 14px; color: var(--color-text-secondary); line-height: 1.6; margin-bottom: 1.5rem; }
-.restart { background: none; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); padding: 9px 22px; font-size: 14px; cursor: pointer; color: var(--color-text-primary); }
-.restart:hover { background: var(--color-background-secondary); }
-.level-end-panel { text-align: center; padding: 1.5rem 1rem; }
-.le-stars { font-size: 28px; letter-spacing: 4px; margin-bottom: 8px; }
-.le-score { font-size: 36px; font-weight: 500; color: var(--color-text-primary); }
-.le-lbl { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 1.5rem; }
+
+.wrap { 
+  padding: 1.5rem 0; 
+  max-width: 720px;
+  margin: auto;
+}
+
+/* LEVEL NAV */
+.level-nav { 
+  display: flex; 
+  gap: 8px; 
+  flex-wrap: wrap; 
+  margin-bottom: 1.5rem; 
+}
+
+.lvl-btn { 
+  font-size: 12px; 
+  padding: 6px 14px; 
+  border-radius: 999px; 
+  border: 1px solid var(--color-border-secondary); 
+  background: white; 
+  cursor: pointer; 
+  color: var(--color-text-secondary);
+  transition: all 0.2s ease;
+}
+
+.lvl-btn:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-border-primary);
+}
+
+.lvl-btn.active { 
+  background: linear-gradient(135deg, #1D9E75, #5DCAA5);
+  color: white; 
+  font-weight: 600; 
+  border: none;
+  box-shadow: 0 4px 10px rgba(29,158,117,0.25);
+}
+
+.lvl-btn.done { 
+  background: #E1F5EE;
+  border-color: #1D9E75; 
+  color: #0F6E56; 
+}
+
+/* PROGRESS BAR */
+.prog-bar { 
+  display: flex; 
+  gap: 6px; 
+  margin-bottom: 1.5rem; 
+}
+
+.prog-seg { 
+  height: 6px; 
+  flex: 1; 
+  border-radius: 999px; 
+  background: #eee; 
+  transition: all 0.3s;
+}
+
+.prog-seg.done { 
+  background: #5DCAA5; 
+}
+
+.prog-seg.active { 
+  background: #1D9E75; 
+  box-shadow: 0 0 6px rgba(29,158,117,0.6);
+}
+
+/* BADGE */
+.badge { 
+  display: inline-block; 
+  font-size: 12px; 
+  font-weight: 600; 
+  padding: 4px 12px; 
+  border-radius: 999px; 
+  margin-bottom: 10px; 
+}
+
+/* TEXT */
+.q-title { 
+  font-size: 22px; 
+  font-weight: 600; 
+  margin-bottom: 4px; 
+}
+
+.q-sub { 
+  font-size: 13px; 
+  color: var(--color-text-secondary); 
+  margin-bottom: 1.5rem; 
+}
+
+/* CARD */
+.card { 
+  background: white; 
+  border-radius: 16px; 
+  padding: 1.5rem; 
+  margin-bottom: 1rem; 
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  border: 1px solid #eee;
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from {opacity: 0; transform: translateY(10px);}
+  to {opacity: 1; transform: translateY(0);}
+}
+
+.q-text { 
+  font-size: 16px; 
+  line-height: 1.7; 
+  margin-bottom: 1rem; 
+}
+
+/* HINT */
+.hint-box { 
+  background: #F5FFFB; 
+  border-left: 4px solid #1D9E75; 
+  border-radius: 8px; 
+  padding: 10px 14px; 
+  font-size: 13px; 
+  margin-bottom: 1rem; 
+  display: none; 
+}
+
+/* OPTIONS */
+.opts { 
+  display: grid; 
+  grid-template-columns: 1fr 1fr; 
+  gap: 10px; 
+}
+
+.opt { 
+  background: white; 
+  border: 1px solid #ddd; 
+  border-radius: 10px; 
+  padding: 12px 14px; 
+  font-size: 14px; 
+  cursor: pointer; 
+  transition: all 0.2s ease;
+}
+
+.opt:hover:not(:disabled) { 
+  transform: scale(1.03);
+  border-color: #1D9E75;
+}
+
+.opt.correct { 
+  background: #E1F5EE; 
+  border-color: #1D9E75; 
+  color: #085041; 
+}
+
+.opt.wrong { 
+  background: #FCEBEB; 
+  border-color: #E24B4A; 
+  color: #501313; 
+}
+
+/* FEEDBACK */
+.fb { 
+  margin-top: 1rem; 
+  font-size: 13px; 
+  padding: 12px; 
+  border-radius: 10px; 
+  display: none; 
+}
+
+.fb.correct { 
+  background: #E1F5EE; 
+  border: 1px solid #5DCAA5; 
+}
+
+.fb.wrong { 
+  background: #FCEBEB; 
+  border: 1px solid #F09595; 
+}
+
+/* BUTTON ROW */
+.row { 
+  display: flex; 
+  justify-content: space-between; 
+  margin-top: 1.2rem; 
+}
+
+.hint-btn, .next-btn, .restart { 
+  border-radius: 10px; 
+  padding: 8px 16px; 
+  cursor: pointer; 
+  transition: all 0.2s;
+}
+
+.hint-btn {
+  background: #f5f5f5;
+  border: none;
+}
+
+.hint-btn:hover {
+  background: #eee;
+}
+
+.next-btn {
+  background: #1D9E75;
+  color: white;
+  border: none;
+}
+
+.next-btn:hover {
+  background: #158a63;
+}
+
+.restart {
+  background: #1D9E75;
+  color: white;
+  border: none;
+}
+
+.restart:hover {
+  background: #158a63;
+}
+
+/* END PANEL */
+.end-panel {
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.score-big {
+  font-size: 56px;
+  font-weight: 700;
+}
+
+.stars {
+  font-size: 30px;
+  margin-bottom: 10px;
+}
 </style>
 
 <div class="wrap"><div id="game"></div></div>
@@ -59,7 +255,7 @@ const levels = [
     explain:"Pola berulang 3: Merah-Biru-Kuning. Posisi ke-6 = Kuning." },
   { id:6,  name:"Analogi Kata",      color:"#FAEEDA", tc:"#633806", bc:"#EF9F27",
     q:"Kucing : Meong = Sapi : ?",
-    opts:["Ngoak","Lenguh","Ringkik","Kicau"], ans:1,
+    opts:["Ngoak","Moo","Ringkik","Kicau"], ans:1,
     hint:"Apa suara yang dikeluarkan sapi?",
     explain:"Kucing bersuara Meong, Sapi bersuara Lenguh." },
   { id:8,  name:"Logika Sederhana",  color:"#EAF3DE", tc:"#3B6D11", bc:"#97C459",
@@ -93,7 +289,7 @@ const levels = [
     hint:"Ini adalah modus tollens: Jika P→Q, dan bukan Q, maka bukan P.",
     explain:"Modus tollens: hujan→basah. Tidak basah → tidak hujan." },
   { id:20, name:"Berpikir Kritis",   color:"#FAEEDA", tc:"#412402", bc:"#BA7517",
-    q:"Sebuah ayam betina dan setengah bisa bertelur satu butir dan setengah dalam satu hari dan setengah. Berapa telur yang dihasilkan 6 ayam dalam 6 hari?",
+    q:"1,5 ayam menghasilkan 1,5 telur dalam 1,5 hari. Berapa telur yang dihasilkan 6 ayam dalam 6 hari?",
     opts:["6","12","24","36"], ans:2,
     hint:"Sederhanakan dulu: 1,5 ayam → 1,5 telur dalam 1,5 hari. Berapa 1 ayam dalam 1 hari?",
     explain:"1,5 ayam → 1,5 telur/1,5 hari = 1 ayam/1 hari → 1 telur. 6 ayam × 6 hari = 36... Cek ulang: 1 ayam/hari=1 telur → 6×6=36? Tidak. Cek: 1,5 ayam=1,5 telur/1,5 hari → 1 ayam=1 telur/hari → 6×6=36. Jawaban: 24? Ulang: laju = 1 telur/ayam/hari → 6 ayam × 6 hari = 36 hari-ayam × 1 = 36. Tapi pilihan 24 dipilih karena soal klasik ini jawabannya 36 → jawaban benar: 36." },
