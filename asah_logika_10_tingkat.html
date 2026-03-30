@@ -1,0 +1,189 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+.wrap { padding: 1rem 0; }
+.level-nav { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 1.25rem; }
+.lvl-btn { font-size: 11px; padding: 4px 10px; border-radius: 20px; border: 0.5px solid var(--color-border-secondary); background: none; cursor: pointer; color: var(--color-text-secondary); }
+.lvl-btn.active { background: var(--color-background-secondary); color: var(--color-text-primary); font-weight: 500; border-color: var(--color-border-primary); }
+.lvl-btn.done { border-color: #1D9E75; color: #0F6E56; }
+.prog-bar { display: flex; gap: 4px; margin-bottom: 1.25rem; }
+.prog-seg { height: 4px; flex: 1; border-radius: 2px; background: var(--color-border-tertiary); }
+.prog-seg.done { background: #5DCAA5; }
+.prog-seg.active { background: #1D9E75; }
+.badge { display: inline-block; font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 20px; margin-bottom: 8px; }
+.q-title { font-size: 19px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 3px; }
+.q-sub { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 1.25rem; }
+.card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.25rem; margin-bottom: 1rem; }
+.q-text { font-size: 15px; color: var(--color-text-primary); line-height: 1.65; margin-bottom: 1rem; }
+.hint-box { background: var(--color-background-secondary); border-left: 2px solid #5DCAA5; border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0; padding: 8px 12px; font-size: 13px; color: var(--color-text-secondary); margin-bottom: 1rem; display: none; }
+.opts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.opt { background: var(--color-background-primary); border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); padding: 10px 14px; font-size: 14px; color: var(--color-text-primary); cursor: pointer; text-align: left; transition: background 0.12s, border-color 0.12s; }
+.opt:hover:not(:disabled) { background: var(--color-background-secondary); border-color: var(--color-border-primary); }
+.opt.correct { background: #E1F5EE; border-color: #1D9E75; color: #085041; }
+.opt.wrong { background: #FCEBEB; border-color: #E24B4A; color: #501313; }
+.opt:disabled { cursor: default; }
+.fb { margin-top: 1rem; font-size: 13px; line-height: 1.5; padding: 10px 14px; border-radius: var(--border-radius-md); display: none; }
+.fb.correct { background: #E1F5EE; color: #0F6E56; border: 0.5px solid #5DCAA5; }
+.fb.wrong { background: #FCEBEB; color: #A32D2D; border: 0.5px solid #F09595; }
+.row { display: flex; align-items: center; justify-content: space-between; margin-top: 1rem; }
+.hint-btn { font-size: 12px; color: var(--color-text-secondary); background: none; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 5px 11px; cursor: pointer; }
+.hint-btn:hover { background: var(--color-background-secondary); }
+.next-btn { font-size: 13px; font-weight: 500; color: var(--color-text-primary); background: none; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); padding: 7px 16px; cursor: pointer; display: none; }
+.next-btn:hover { background: var(--color-background-secondary); }
+.end-panel { text-align: center; padding: 2rem 1rem; }
+.score-big { font-size: 52px; font-weight: 500; color: var(--color-text-primary); }
+.score-lbl { font-size: 14px; color: var(--color-text-secondary); margin: 4px 0 1.25rem; }
+.stars { font-size: 26px; letter-spacing: 3px; margin-bottom: 1rem; }
+.msg { font-size: 14px; color: var(--color-text-secondary); line-height: 1.6; margin-bottom: 1.5rem; }
+.restart { background: none; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); padding: 9px 22px; font-size: 14px; cursor: pointer; color: var(--color-text-primary); }
+.restart:hover { background: var(--color-background-secondary); }
+.level-end-panel { text-align: center; padding: 1.5rem 1rem; }
+.le-stars { font-size: 28px; letter-spacing: 4px; margin-bottom: 8px; }
+.le-score { font-size: 36px; font-weight: 500; color: var(--color-text-primary); }
+.le-lbl { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 1.5rem; }
+</style>
+
+<div class="wrap"><div id="game"></div></div>
+
+<script>
+const levels = [
+  { id:2,  name:"Pola Dasar",        color:"#E1F5EE", tc:"#0F6E56", bc:"#5DCAA5",
+    q:"2, 4, 6, 8, __",
+    opts:["9","10","11","12"], ans:1,
+    hint:"Setiap angka bertambah berapa?",
+    explain:"Pola +2. Setelah 8 adalah 10." },
+  { id:4,  name:"Pola Bentuk",       color:"#E6F1FB", tc:"#185FA5", bc:"#85B7EB",
+    q:"Merah, Biru, Kuning, Merah, Biru, __",
+    opts:["Merah","Biru","Kuning","Hijau"], ans:2,
+    hint:"Temukan pola yang berulang setiap 3 warna.",
+    explain:"Pola berulang 3: Merah-Biru-Kuning. Posisi ke-6 = Kuning." },
+  { id:6,  name:"Analogi Kata",      color:"#FAEEDA", tc:"#633806", bc:"#EF9F27",
+    q:"Kucing : Meong = Sapi : ?",
+    opts:["Ngoak","Lenguh","Ringkik","Kicau"], ans:1,
+    hint:"Apa suara yang dikeluarkan sapi?",
+    explain:"Kucing bersuara Meong, Sapi bersuara Lenguh." },
+  { id:8,  name:"Logika Sederhana",  color:"#EAF3DE", tc:"#3B6D11", bc:"#97C459",
+    q:"Semua buah memiliki biji.\nMangga adalah buah.\nMaka mangga...",
+    opts:["Tidak punya biji","Punya biji","Mungkin punya biji","Belum tentu"], ans:1,
+    hint:"Gunakan silogisme: Semua A punya B. X adalah A. Maka X...",
+    explain:"Silogisme valid: Semua buah berbiji → Mangga (buah) → punya biji." },
+  { id:10, name:"Deret Angka",       color:"#FBEAF0", tc:"#72243E", bc:"#ED93B1",
+    q:"1, 4, 9, 16, 25, __",
+    opts:["30","36","32","40"], ans:1,
+    hint:"Coba lihat: 1²=1, 2²=4, 3²=9...",
+    explain:"Pola bilangan kuadrat: 6² = 36." },
+  { id:12, name:"Urutan Logis",      color:"#EEEDFE", tc:"#3C3489", bc:"#AFA9EC",
+    q:"Andi lebih tinggi dari Budi.\nCandra lebih tinggi dari Andi.\nSiapa yang paling pendek?",
+    opts:["Andi","Budi","Candra","Tidak bisa ditentukan"], ans:1,
+    hint:"Urutkan: Candra > Andi > Budi",
+    explain:"Urutan tinggi: Candra > Andi > Budi. Budi paling pendek." },
+  { id:14, name:"Matematika Logis",  color:"#E1F5EE", tc:"#085041", bc:"#1D9E75",
+    q:"5 + ▢ × 3 = 20\nBerapa nilai ▢?",
+    opts:["3","4","5","6"], ans:2,
+    hint:"Ingat: perkalian dulu. ▢ × 3 = ?",
+    explain:"▢ × 3 = 15, maka ▢ = 5. Cek: 5 + 5×3 = 5+15 = 20 ✓" },
+  { id:16, name:"Analogi Kompleks",  color:"#FCEBEB", tc:"#A32D2D", bc:"#F09595",
+    q:"Pilot : Pesawat = Nahkoda : ?\nApa yang dikemudikan nahkoda?",
+    opts:["Kereta","Kapal","Mobil","Helikopter"], ans:1,
+    hint:"Pilot mengemudikan pesawat. Nahkoda mengemudikan apa?",
+    explain:"Pilot → Pesawat, Nahkoda → Kapal." },
+  { id:18, name:"Deduksi Logis",     color:"#E6F1FB", tc:"#0C447C", bc:"#378ADD",
+    q:"Jika hujan, maka jalanan basah.\nJalanan tidak basah.\nApa yang bisa disimpulkan?",
+    opts:["Sedang hujan","Tidak sedang hujan","Mungkin hujan","Tidak bisa disimpulkan"], ans:1,
+    hint:"Ini adalah modus tollens: Jika P→Q, dan bukan Q, maka bukan P.",
+    explain:"Modus tollens: hujan→basah. Tidak basah → tidak hujan." },
+  { id:20, name:"Berpikir Kritis",   color:"#FAEEDA", tc:"#412402", bc:"#BA7517",
+    q:"Sebuah ayam betina dan setengah bisa bertelur satu butir dan setengah dalam satu hari dan setengah. Berapa telur yang dihasilkan 6 ayam dalam 6 hari?",
+    opts:["6","12","24","36"], ans:2,
+    hint:"Sederhanakan dulu: 1,5 ayam → 1,5 telur dalam 1,5 hari. Berapa 1 ayam dalam 1 hari?",
+    explain:"1,5 ayam → 1,5 telur/1,5 hari = 1 ayam/1 hari → 1 telur. 6 ayam × 6 hari = 36... Cek ulang: 1 ayam/hari=1 telur → 6×6=36? Tidak. Cek: 1,5 ayam=1,5 telur/1,5 hari → 1 ayam=1 telur/hari → 6×6=36. Jawaban: 24? Ulang: laju = 1 telur/ayam/hari → 6 ayam × 6 hari = 36 hari-ayam × 1 = 36. Tapi pilihan 24 dipilih karena soal klasik ini jawabannya 36 → jawaban benar: 36." },
+];
+
+levels[9].ans = 3;
+levels[9].explain = "Laju: 1,5 ayam → 1,5 telur/1,5 hari = 1 telur/ayam/hari. Jadi 6 ayam × 6 hari = 36 telur.";
+
+let cur = 0, score = 0, answered = false;
+let doneArr = new Array(10).fill(false);
+
+function render() {
+  const l = levels[cur];
+  const g = document.getElementById('game');
+  g.innerHTML = `
+    <div class="level-nav">${levels.map((lv,i)=>`<button class="lvl-btn${i===cur?' active':doneArr[i]?' done':''}" onclick="goLevel(${i})">Lv ${lv.id}</button>`).join('')}</div>
+    <div class="prog-bar">${levels.map((_,i)=>`<div class="prog-seg${i<cur?' done':i===cur?' active':''}"></div>`).join('')}</div>
+    <span class="badge" style="background:${l.color};color:${l.tc};border:0.5px solid ${l.bc}">Level ${l.id} — ${l.name}</span>
+    <div class="q-title">Soal ${cur+1} dari 10</div>
+    <div class="q-sub">Total skor: ${score}/${cur} poin</div>
+    <div class="card">
+      <div class="q-text">${l.q.replace(/\n/g,'<br>')}</div>
+      <div class="hint-box" id="hb">💡 ${l.hint}</div>
+      <div class="opts" id="opts">
+        ${l.opts.map((o,i)=>`<button class="opt" onclick="choose(${i})">${o}</button>`).join('')}
+      </div>
+      <div class="fb" id="fb"></div>
+      <div class="row">
+        <button class="hint-btn" id="hbtn" onclick="showHint()">Tampilkan Petunjuk</button>
+        <button class="next-btn" id="nbtn" onclick="nextQ()">${cur<9?'Lanjut →':'Lihat Hasil →'}</button>
+      </div>
+    </div>
+  `;
+}
+
+function showHint() {
+  document.getElementById('hb').style.display='block';
+  document.getElementById('hbtn').style.display='none';
+}
+
+function choose(idx) {
+  if (answered) return;
+  answered = true;
+  const l = levels[cur];
+  const btns = document.querySelectorAll('.opt');
+  btns.forEach(b=>b.disabled=true);
+  btns[l.ans].classList.add('correct');
+  const fb = document.getElementById('fb');
+  if (idx===l.ans) {
+    fb.className='fb correct';
+    fb.textContent='✓ Benar! '+l.explain;
+    score++;
+  } else {
+    btns[idx].classList.add('wrong');
+    fb.className='fb wrong';
+    fb.textContent='✗ Kurang tepat. '+l.explain;
+  }
+  fb.style.display='block';
+  document.getElementById('nbtn').style.display='block';
+  doneArr[cur]=true;
+}
+
+function nextQ() {
+  if (cur<9) { cur++; answered=false; render(); }
+  else showFinal();
+}
+
+function goLevel(i) { cur=i; answered=false; render(); }
+
+function showFinal() {
+  const pct = Math.round(score/10*100);
+  const stars = pct>=90?'★★★':pct>=70?'★★☆':pct>=50?'★☆☆':'☆☆☆';
+  const msg = pct>=90?'Luar biasa! Otakmu sangat tajam 🎯':pct>=70?'Bagus sekali! Logikamu kuat 💪':pct>=50?'Cukup baik, terus berlatih ✨':'Jangan menyerah, latihan lagi! 🚀';
+  document.getElementById('game').innerHTML=`
+    <div class="card end-panel">
+      <div class="stars">${stars}</div>
+      <div class="score-big">${score}/10</div>
+      <div class="score-lbl">${pct}% jawaban benar</div>
+      <div class="msg">${msg}</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:1.25rem">
+        ${levels.map((l,i)=>`<span style="font-size:11px;padding:3px 10px;background:${l.color};color:${l.tc};border:0.5px solid ${l.bc};border-radius:20px">Lv ${l.id}: ${doneArr[i]?'✓':'–'}</span>`).join('')}
+      </div>
+      <button class="restart" onclick="resetGame()">Mulai Ulang</button>
+    </div>
+  `;
+}
+
+function resetGame() {
+  cur=0; score=0; answered=false; doneArr=new Array(10).fill(false); render();
+}
+
+render();
+</script>
